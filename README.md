@@ -56,19 +56,18 @@ A arquitetura foi planejada com base nas necessidades do sistema, e algumas muda
    cd Library-Web
    ```
 
-2. Certifique-se de ter o JDK 17 ou superior instalado.
-
-3. Compile o projeto utilizando o Maven:
+2. Compile o projeto utilizando o Maven:
    ```bash
    mvn clean install
    ```
 
-4. Execute o servidor:
+3. Execute o Docker Compose.
    ```bash
-   mvn spring-boot:run
+   docker-compose build
+   docker-compose up
    ```
 
-5. A API estará disponível em `http://localhost:8080`.
+4. A API estará disponível em `http://localhost:8080`.
 
 ## Melhorias planejadas
 
