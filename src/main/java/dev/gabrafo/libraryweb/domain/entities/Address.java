@@ -1,5 +1,7 @@
-package dev.gabrafo.libraryweb.entities;
+package dev.gabrafo.libraryweb.domain.entities;
 
+import dev.gabrafo.libraryweb.domain.dtos.AddressDTO;
+import dev.gabrafo.libraryweb.domain.enums.FederalUnit;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -8,28 +10,27 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 @Getter
 @Setter
 @NoArgsConstructor
-
-@Entity
+@Entity(name = "tb_address")
 public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long addressId;
 
-    @Column(name = "zip_code", nullable = false)
+    @Column(nullable = false)
     @NotEmpty()
     private String zipCode;
 
-    @Column(name = "street", nullable = false)
+    @Column(nullable = false)
     private String street;
 
-    @Column(name = "neighbourhood", nullable = false)
+    @Column(nullable = false)
     private String neighbourhood;
 
-    @Column(name = "city", nullable = false)
+    @Column(nullable = false)
     private String city;
 
-    @Column(name = "federal_unit", nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FederalUnit federalUnit;
 

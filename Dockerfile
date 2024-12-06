@@ -16,4 +16,6 @@ WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
 
+RUN mvn clean install
+
 CMD ["java", "-jar", "app.jar"]
