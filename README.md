@@ -10,7 +10,7 @@ A versão anterior dessa API está disponível em [BibliotecaAPI](https://github
 - **Autenticação com OpenID**: Implementação de login via serviços de terceiros (como Google, GitHub, etc.) utilizando OpenID, permitindo que os usuários façam login de forma simples e segura.
 - **Frontend com Thymeleaf**: Criação de um frontend para a aplicação utilizando **Thymeleaf** como template engine, integrado com o backend em Spring Boot.
 - **Confirmação de email e recuperação de senha**: Implementação de funcionalidades para confirmação de e-mail durante o cadastro e recuperação de senha utilizando o **Java Mail Sender**.
-- **Consumo de APIs externas**: A aplicação irá consumir a API **ViaCEP** para obter informações de endereço a partir de um CEP. Além disso, será consumida uma API de livros (a ser definida) para populamento das entidades `Livro` e `ExemplarDeLivro`.
+- **Consumo de APIs externas**: A aplicação irá consumir a API **ViaCEP** para obter informações de endereço a partir de um CEP.
 
 ## Arquitetura
 
@@ -29,15 +29,11 @@ A arquitetura de dados foi planejada com base nas seguintes entidades principais
 3. **Book**:
    - Representa o livro enquanto obra, sem considerar edições específicas. Assim, contemplará informações mais gerais como gênero textual, autor, etc.
 
-4. **BookUnity**:
-   - Representa um exemplar físico de um livro, considerando a editora, o ano de edição, o número de exemplares e outros detalhes específicos.
-
 ### Mudanças no Diagrama Relacional
 
 A arquitetura foi planejada com base nas necessidades do sistema, e algumas mudanças foram feitas no diagrama relacional fornecido pela empresa:
 
 - A exclusão do atributo `CEP` da entidade `Pessoa`, substituindo-o por uma relação com a nova entidade `Address`.
-- A introdução de uma nova entidade `BookUnity` para representar exemplares individuais de livros, possibilitando a gestão de várias edições do mesmo livro.
 
 ## Tecnologias utilizadas (ou a serem utilizadas)
 
@@ -74,4 +70,3 @@ A arquitetura foi planejada com base nas necessidades do sistema, e algumas muda
 - **Testes**: Como mencionado, planejo adicionar cobertura de testes robusta.
 - **Integração com OpenID**: Será implementado o login com contas de serviços como o Gmail.
 - **Frontend**: Desenvolvimento de uma interface de usuário com Thymeleaf.
-- **Outras APIs**: Consumo de mais APIs para enriquecer os dados da aplicação.
