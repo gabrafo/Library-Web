@@ -30,7 +30,7 @@ public class JwtService {
                 .issuer("libraryweb")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expirationTime))
-                .subject((authentication.getName()))
+                .subject(authentication.getName())
                 .claim("scope", scopes)
                 .build();
 

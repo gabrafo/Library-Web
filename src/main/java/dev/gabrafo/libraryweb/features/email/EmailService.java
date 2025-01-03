@@ -1,7 +1,6 @@
 package dev.gabrafo.libraryweb.features.email;
 
-import lombok.Value;
-import org.jetbrains.annotations.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,7 +13,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void sendEmail(@NotNull Email email){
+    public void sendEmail(@NotEmpty Email email){
         var message = new SimpleMailMessage();
         message.setTo(email.to());
         message.setFrom("librarynoreplay@email.com");
