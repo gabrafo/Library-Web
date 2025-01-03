@@ -1,12 +1,12 @@
 package dev.gabrafo.libraryweb.features.user;
 
-import dev.gabrafo.libraryweb.features.address.Address;
-import dev.gabrafo.libraryweb.features.loan.Loan;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.gabrafo.libraryweb.enums.Role;
-import dev.gabrafo.libraryweb.features.user.security.UserLoginDTO;
+import dev.gabrafo.libraryweb.features.address.Address;
+import dev.gabrafo.libraryweb.features.book.Book;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +27,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    @NotNull
     private String name;
 
     @NotNull
@@ -40,6 +41,7 @@ public class User {
     private Role role;
 
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
     // Usuário referencia endereço, mas não o contrário. Motivo: Permitir reutilização de endereços iguais para diferentes usuários.
@@ -47,21 +49,35 @@ public class User {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id", nullable = false)
     private Address address;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Loan> loans = new ArrayList<>();
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "tb_user_book",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Book> borrowedBooks = new ArrayList<>();
 
-    @Builder
-    public User(UserDTO dto) {
+    private boolean isEmailVerified;
+
+    public User(UserRequestDTO dto) {
         this.name = dto.name();
         this.email = dto.email();
         this.password = dto.password();
+        this.role = Role.valueOf(dto.role());
+        this.birthDate = dto.birthDate();
+    }
+
+    public User(UserResponseDTO dto) {
+        this.name = dto.name();
+        this.email = dto.email();
+        this.borrowedBooks = dto.borrowedBooks();
         this.role = dto.role();
         this.birthDate = dto.birthDate();
         this.address = dto.address();
-        this.loans = dto.loans();
     }
 
-    public boolean isLoginCorrect(UserLoginDTO userLoginDTO, PasswordEncoder encoder){
-        return(encoder.matches(userLoginDTO.password(), this.password));
+    public boolean isLoginCorrect(UserLoginDTO userLoginDTO, PasswordEncoder encoder) {
+        return (encoder.matches(userLoginDTO.password(), this.password));
     }
 }
