@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Endereço", description = "Endpoints para realizar a consulta de CEP usando a API ViaCep")
 public class AddressController {
 
-    @Autowired
-    private AddressService service;
+    private final AddressService service;
+
+    public AddressController(AddressService service) {
+        this.service = service;
+    }
 
     @Operation(summary = "Busca um endereço",
             description = "Faz uma requisição à API ViaCep usando o CEP (ZIP) para checar " +
