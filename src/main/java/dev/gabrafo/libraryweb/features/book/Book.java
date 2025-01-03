@@ -1,6 +1,7 @@
 package dev.gabrafo.libraryweb.features.book;
 
-import dev.gabrafo.libraryweb.features.loan.Loan;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.gabrafo.libraryweb.features.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -39,16 +40,25 @@ public class Book {
 
     private LocalDate releaseDate;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Loan> loans;
+    private int quantity;
+
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "tb_user_book",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<User> borrowedBy;
 
     @Builder
     public Book(BookDTO dto){
         this.isbn = dto.isbn();
         this.title = dto.title();
         this.authors = dto.authors();
+        this.quantity = dto.quantity();
         this.publisher = dto.publisher();
         this.releaseDate = dto.releaseDate();
-        this.loans = dto.loans();
+        this.borrowedBy = dto.borrowedBy();
     }
 }

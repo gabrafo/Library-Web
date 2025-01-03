@@ -56,6 +56,17 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PostMapping(value = "/add")
+    @Operation(summary = "Adicionar unidade", description = "Adiciona mais unidades disponíveis para empréstimo a um livro existente.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Livro encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado")
+    })
+    public ResponseEntity<Void> addBookUnit(@Valid @RequestBody BookAdditionDTO dto){
+        service.addBookUnit(dto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @PutMapping(value = "/update/{id}", produces = "application/json", consumes = "application/json")
     @Operation(summary = "Atualizar livro", description = "Atualiza os detalhes de um livro existente.")
     @ApiResponses({
@@ -77,7 +88,7 @@ public class BookController {
             @ApiResponse(responseCode = "200", description = "Livro excluído com sucesso"),
             @ApiResponse(responseCode = "404", description = "Livro não encontrado")
     })
-    public ResponseEntity<String> deleteBookByid(@PathVariable Long id) {
+    public ResponseEntity<String> deleteBookById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteBookById(id));
     }
 }

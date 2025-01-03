@@ -1,10 +1,12 @@
 package dev.gabrafo.libraryweb.features.book;
 
+import dev.gabrafo.libraryweb.errors.exceptions.ExistentBookException;
 import dev.gabrafo.libraryweb.errors.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,7 +23,16 @@ public class BookService {
     @Transactional
     public void createBook(BookDTO dto){
         Book newBook = mapper.toEntity(dto);
+        if(repository.findByIsbn(dto.isbn()).isPresent()) throw new ExistentBookException("Livro com ISBN '" + dto.isbn() +  "' já existente.");
         repository.save(newBook);
+    }
+
+    @Transactional
+    public void addBookUnit(BookAdditionDTO dto){
+        Optional<Book> book = repository.findByIsbn(dto.isbn());
+        String isbn = dto.isbn();
+        if(book.isEmpty()) throw new NotFoundException("Livro com ISBN '" + isbn +  "' inexistente.");
+        book.get().setQuantity(book.get().getQuantity()+dto.units());
     }
 
     public List<BookDTO> findAlBooks(){
@@ -39,7 +50,7 @@ public class BookService {
 
         updatedBook.setAuthors(dto.authors());
         updatedBook.setIsbn(dto.isbn());
-        updatedBook.setLoans(dto.loans());
+        updatedBook.setBorrowedBy(dto.borrowedBy());
         updatedBook.setTitle(dto.title());
         updatedBook.setReleaseDate(dto.releaseDate());
         updatedBook.setPublisher(dto.publisher());
@@ -50,7 +61,10 @@ public class BookService {
     @Transactional
     public String deleteBookById(Long id){
         Book deleted = repository.findById(id).orElseThrow(() -> new NotFoundException("Livro não encontrado!"));
+
+        String isbn = deleted.getIsbn();
+
         repository.delete(deleted);
-        return "Livro com título: '" + deleted.getTitle() + "' deletado!";
+        return "Livro com ISBN: '" + isbn + "' deletado!";
     }
 }

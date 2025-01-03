@@ -1,8 +1,9 @@
 package dev.gabrafo.libraryweb.features.book;
 
-import dev.gabrafo.libraryweb.features.loan.Loan;
+import dev.gabrafo.libraryweb.features.user.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -23,9 +24,12 @@ public record BookDTO (
 
         String publisher,
 
+        @Positive
+        int quantity,
+
         LocalDate releaseDate,
 
-        List<Loan> loans
+        List<User> borrowedBy
 ){
     @Builder
     public BookDTO(Book book) {
@@ -34,8 +38,9 @@ public record BookDTO (
                 book.getTitle(),
                 book.getAuthors(),
                 book.getPublisher(),
+                book.getQuantity(),
                 book.getReleaseDate(),
-                book.getLoans()
+                book.getBorrowedBy()
         );
     }
 }
