@@ -11,10 +11,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "LibraryAPI", version = "v1"),
-        security = @SecurityRequirement(name = "bearerAuth"))
-@io.swagger.v3.oas.annotations.security.SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, bearerFormat = "JWT")
+@OpenAPIDefinition(
+        info = @Info(title = "LibraryAPI", version = "v1"),
+        security = @SecurityRequirement(name = "bearerAuth")
+)
+@io.swagger.v3.oas.annotations.security.SecurityScheme(
+        name = "bearerAuth",
+        scheme = "bearer",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT"
+)
 public class SwaggerConfigurations {
+
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
