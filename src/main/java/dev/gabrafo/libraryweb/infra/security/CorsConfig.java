@@ -10,10 +10,9 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**") // Configuração válida pra qualquer endpoint
-                .allowedMethods("*")
-                .maxAge(3600)
                 .allowedOrigins("http://localhost:8080")
-                .allowedHeaders("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH")
+                .maxAge(3600)
                 .allowCredentials(true);
     }
 }
