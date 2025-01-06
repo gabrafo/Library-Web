@@ -34,3 +34,6 @@ build/
 
 ### Docker Compose: Tem credenciais, por isso não irei compartilhar ###
 compose.yaml
+
+### Node_modules ###
+/frontend/node_modules
