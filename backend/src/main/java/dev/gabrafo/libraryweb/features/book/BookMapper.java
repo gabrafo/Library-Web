@@ -10,7 +10,7 @@ public class BookMapper {
         return BookDTO.builder().book(book).build();
     }
 
-    public Book toEntity(BookDTO bookDTO){
-        return Book.builder().dto(bookDTO).build();
+    public Book toEntity(BookDTO BookDTO){
+        return Book.builder().dto(BookDTO).build();
     }
 }

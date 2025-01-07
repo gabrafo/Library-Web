@@ -8,8 +8,9 @@ import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public record BookDTO (
+public record BookDTO(
         @NotEmpty
         @Pattern(
                 regexp = "^(97[89]\\d{10})$",
@@ -29,7 +30,7 @@ public record BookDTO (
 
         LocalDate releaseDate,
 
-        List<User> borrowedBy
+        List<String> emailBorrowedBy
 ){
     @Builder
     public BookDTO(Book book) {
@@ -40,7 +41,9 @@ public record BookDTO (
                 book.getPublisher(),
                 book.getQuantity(),
                 book.getReleaseDate(),
-                book.getBorrowedBy()
+                book.getBorrowedBy().stream()
+                        .map(User::getEmail)
+                        .collect(Collectors.toList())
         );
     }
 }

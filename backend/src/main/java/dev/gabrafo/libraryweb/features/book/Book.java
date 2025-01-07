@@ -5,7 +5,10 @@ import dev.gabrafo.libraryweb.features.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,6 +62,16 @@ public class Book {
         this.quantity = dto.quantity();
         this.publisher = dto.publisher();
         this.releaseDate = dto.releaseDate();
-        this.borrowedBy = dto.borrowedBy();
+    }
+
+    public Book(String isbn, String title, List<String> authors, String publisher, LocalDate releaseDate,
+                int quantity, List<User> borrowedBy) {
+        this.isbn = isbn;
+        this.title = title;
+        this.authors = authors;
+        this.publisher = publisher;
+        this.releaseDate = releaseDate;
+        this.quantity = quantity;
+        this.borrowedBy = borrowedBy;
     }
 }
