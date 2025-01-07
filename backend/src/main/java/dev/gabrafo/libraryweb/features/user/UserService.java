@@ -3,6 +3,7 @@ package dev.gabrafo.libraryweb.features.user;
 import dev.gabrafo.libraryweb.enums.Role;
 import dev.gabrafo.libraryweb.errors.exceptions.AlreadyVerifiedException;
 import dev.gabrafo.libraryweb.errors.exceptions.ExistentEmailException;
+import dev.gabrafo.libraryweb.errors.exceptions.InvalidEntryException;
 import dev.gabrafo.libraryweb.errors.exceptions.NotFoundException;
 import dev.gabrafo.libraryweb.features.address.Address;
 import dev.gabrafo.libraryweb.features.address.AddressService;
@@ -17,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,9 +48,18 @@ public class UserService {
             throw new ExistentEmailException("Email já em uso!");
         }
 
+        LocalDate birthDate = dto.birthDate();
+        LocalDate currentDate = LocalDate.now();
+        int age = Period.between(birthDate, currentDate).getYears();
+
+        if (age < 18) {
+            throw new InvalidEntryException("O usuário deve ter pelo menos 18 anos.");
+        }
+
         Address address = addressService.findAddress(dto.zipCode());
 
         User newUser = mapper.toEntity(dto);
+
         newUser.setAddress(address);
         newUser.setPassword(encoder.encode(newUser.getPassword()));
         newUser.setEmailVerified(false);
