@@ -77,6 +77,18 @@ public class User {
         this.address = dto.address();
     }
 
+    public User(String name, String email, String password, Role role, LocalDate birthDate,
+                Address address, List<Book> borrowedBooks, boolean isEmailVerified) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.birthDate = birthDate;
+        this.address = address;
+        this.borrowedBooks = borrowedBooks;
+        this.isEmailVerified = isEmailVerified;
+    }
+
     public boolean isLoginCorrect(UserLoginDTO userLoginDTO, PasswordEncoder encoder) {
         return (encoder.matches(userLoginDTO.password(), this.password));
     }
