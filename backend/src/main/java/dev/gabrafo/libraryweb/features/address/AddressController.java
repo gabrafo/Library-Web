@@ -28,7 +28,7 @@ public class AddressController {
     @Operation(summary = "Busca um endereço",
             description = "Faz uma requisição à API ViaCep usando o CEP (ZIP) para checar " +
                     "se o endereço existe ou não, caso exista o retorna ao usuário.",
-            tags = {"Address"},
+            tags = {"Endereço"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
                             content = @Content(schema = @Schema(implementation = AddressDTO.class))

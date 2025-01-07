@@ -43,6 +43,14 @@ public class Address {
         this.federalUnit = FederalUnit.valueOf(dto.federalUnit());
     }
 
+    public Address(FederalUnit federalUnit, String city, String neighbourhood, String street, String zipCode) {
+        this.federalUnit = federalUnit;
+        this.city = city;
+        this.neighbourhood = neighbourhood;
+        this.street = street;
+        this.zipCode = zipCode;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(obj, this); // Compara os objetos e não endereços de memória
