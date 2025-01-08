@@ -5,6 +5,7 @@ import dev.gabrafo.libraryweb.enums.Role;
 import dev.gabrafo.libraryweb.features.address.Address;
 import dev.gabrafo.libraryweb.features.book.Book;
 import dev.gabrafo.libraryweb.features.user.User;
+import dev.gabrafo.libraryweb.features.user.UserRequestDTO;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -14,26 +15,8 @@ import java.util.List;
 
 public class TestUtils {
 
-    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    public static Address createAddress(TestEntityManager testEntityManager) {
-        return testEntityManager.persist(new Address(
-                FederalUnit.SP,
-                "São Paulo",
-                "Bela Vista",
-                "Avenida Paulista",
-                "01310-200"
-        ));
-    }
-
     public static User createAuthenticatedUser(TestEntityManager testEntityManager) {
-        Address savedAddress = testEntityManager.persist(new Address(
-                FederalUnit.SP,
-                "São Paulo",
-                "Bela Vista",
-                "Avenida Paulista",
-                "01310-200"
-        ));
+        Address savedAddress = testEntityManager.persist(ADDRESS);
         return new User(
                 "Authenticated",
                 "authenticated@email.com",
@@ -46,19 +29,36 @@ public class TestUtils {
         );
     }
 
-    public static User createAdmindUser(TestEntityManager testEntityManager) {
-        Address savedAddress = createAddress(testEntityManager);
-        return new User(
-                "Admin",
-                "admin@email.com",
-                passwordEncoder.encode("admin123"),
-                Role.ADMIN,
-                LocalDate.of(1985, 12, 31),
-                savedAddress,
+    public static final Address ADDRESS =
+            new Address(
+                FederalUnit.SP,
+                "São Paulo",
+                "Bela Vista",
+                "Avenida Paulista",
+                "01310-200"
+        );
+
+    public static final User AUTHENTICATED_USER =
+            new User(
+                "Authenticated",
+                "authenticated@email.com",
+                new BCryptPasswordEncoder().encode("authenticated123"),
+                Role.AUTHENTICATED,
+                LocalDate.of(1990, 1, 1),
+                ADDRESS,
                 new ArrayList<>(),
                 true
         );
-    }
+
+    public static final UserRequestDTO AUTHENTICATED_USER_REQUEST_DTO =
+            new UserRequestDTO(
+                    "Authenticated",
+                    "authenticated@email.com",
+                    new BCryptPasswordEncoder().encode("authenticated123"),
+                    Role.AUTHENTICATED.toString(),
+                    LocalDate.of(1990, 1, 1),
+                    ADDRESS.getZipCode()
+            );
 
     public static final Book AVAILABLE_BOOK = new Book(
             "9780134494166",
