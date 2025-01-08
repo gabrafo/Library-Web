@@ -6,7 +6,9 @@ import dev.gabrafo.libraryweb.enums.Role;
 import dev.gabrafo.libraryweb.features.address.Address;
 import dev.gabrafo.libraryweb.features.book.Book;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,13 +29,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @NotNull
+    @NotEmpty
     private String name;
 
-    @NotNull
+    @Column(nullable = false, unique = true)
+    @NotEmpty
     private String email;
 
-    @NotNull
+    @NotEmpty
     private String password;
 
     @NotNull
@@ -41,6 +44,7 @@ public class User {
     private Role role;
 
     @NotNull
+    @PastOrPresent
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
