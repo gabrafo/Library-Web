@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,6 +52,7 @@ public class BookController {
             @ApiResponse(responseCode = "201", description = "Livro criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Requisição inválida")
     })
+    @PreAuthorize("@userService.isAdmin(authentication.name)")
     public ResponseEntity<Void> createBook(@Valid @RequestBody BookDTO dto) {
         service.createBook(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -76,6 +78,7 @@ public class BookController {
             @ApiResponse(responseCode = "404", description = "Livro não encontrado"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
     })
+    @PreAuthorize("@userService.isAdmin(authentication.name)")
     public ResponseEntity<BookDTO> updateBookById(
             @PathVariable Long id,
             @Valid @RequestBody BookDTO dto) {
@@ -88,6 +91,7 @@ public class BookController {
             @ApiResponse(responseCode = "200", description = "Livro excluído com sucesso"),
             @ApiResponse(responseCode = "404", description = "Livro não encontrado")
     })
+    @PreAuthorize("@userService.isAdmin(authentication.name)")
     public ResponseEntity<String> deleteBookById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteBookById(id));
     }
