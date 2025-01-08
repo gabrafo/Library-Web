@@ -6,6 +6,7 @@ import dev.gabrafo.libraryweb.features.address.Address;
 import dev.gabrafo.libraryweb.features.book.Book;
 import dev.gabrafo.libraryweb.features.user.User;
 import dev.gabrafo.libraryweb.features.user.UserRequestDTO;
+import dev.gabrafo.libraryweb.features.user.UserResponseDTO;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -49,6 +50,19 @@ public class TestUtils {
                 new ArrayList<>(),
                 true
         );
+
+    public static final UserResponseDTO AUTHENTICATED_USER_RESPONSE_DTO =
+            new UserResponseDTO(
+                    AUTHENTICATED_USER.getUserId(),
+                    AUTHENTICATED_USER.getName(),
+                    AUTHENTICATED_USER.getEmail(),
+                    AUTHENTICATED_USER.getRole(),
+                    AUTHENTICATED_USER.getBirthDate(),
+                    AUTHENTICATED_USER.getAddress(),
+                    AUTHENTICATED_USER.getBorrowedBooks()
+            );
+
+
     public static final User ADMIN_USER =
             new User(
                     "Admin",
