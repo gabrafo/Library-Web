@@ -43,7 +43,7 @@ public class UserService {
     }
 
     @Transactional
-    public void registerUser(UserRequestDTO dto){
+    public UserResponseDTO registerUser(UserRequestDTO dto){
         if(repository.findByEmail(dto.email()).isPresent()){
             throw new ExistentEmailException("Email já em uso!");
         }
@@ -64,6 +64,8 @@ public class UserService {
         newUser.setPassword(encoder.encode(newUser.getPassword()));
         newUser.setEmailVerified(false);
         repository.save(newUser);
+
+        return new UserResponseDTO(newUser);
     }
 
     @Transactional

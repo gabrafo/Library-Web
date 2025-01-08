@@ -33,9 +33,8 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
             @ApiResponse(responseCode = "409", description = "Email já em uso")
     })
-    public ResponseEntity<String> register(@RequestBody UserRequestDTO dto) {
-        service.registerUser(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário registrado com sucesso");
+    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.registerUser(dto));
     }
 
     @PostMapping("/login")
