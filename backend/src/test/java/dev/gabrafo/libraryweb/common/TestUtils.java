@@ -49,6 +49,17 @@ public class TestUtils {
                 new ArrayList<>(),
                 true
         );
+    public static final User ADMIN_USER =
+            new User(
+                    "Admin",
+                    "admin@email.com",
+                    new BCryptPasswordEncoder().encode("admin123"),
+                    Role.ADMIN,
+                    LocalDate.of(1990, 1, 1),
+                    ADDRESS,
+                    new ArrayList<>(),
+                    true
+            );
 
     public static final UserRequestDTO AUTHENTICATED_USER_REQUEST_DTO =
             new UserRequestDTO(
