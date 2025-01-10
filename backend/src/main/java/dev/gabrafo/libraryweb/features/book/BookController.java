@@ -27,10 +27,13 @@ public class BookController {
 
     @GetMapping(value = "/all", produces = "application/json")
     @Operation(summary = "Listar todos os livros", description = "Retorna uma lista com todos os livros disponíveis.")
+    @ApiResponses({
     @ApiResponse(responseCode = "200", description = "Lista de livros retornada com sucesso",
             content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = BookDTO.class)))
-    public ResponseEntity<List<BookDTO>> findAllBooks() {
+                    schema = @Schema(implementation = BookResponseDTO.class))),
+    @ApiResponse(responseCode = "401", description = "Não autorizado")
+    })
+    public ResponseEntity<List<BookResponseDTO>> findAllBooks() {
         return ResponseEntity.status(HttpStatus.OK).body(service.findAlBooks());
     }
 
@@ -39,10 +42,11 @@ public class BookController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Livro encontrado com sucesso",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = BookDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Livro não encontrado")
+                            schema = @Schema(implementation = BookResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
-    public ResponseEntity<BookDTO> findBookById(@PathVariable("id") Long id) {
+    public ResponseEntity<BookResponseDTO> findBookById(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.findBookById(id));
     }
 
@@ -50,10 +54,11 @@ public class BookController {
     @Operation(summary = "Criar um novo livro", description = "Adiciona um novo livro ao sistema.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Livro criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida")
+            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name)")
-    public ResponseEntity<Void> createBook(@Valid @RequestBody BookDTO dto) {
+    public ResponseEntity<Void> createBook(@Valid @RequestBody BookRequestDTO dto) {
         service.createBook(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -62,7 +67,8 @@ public class BookController {
     @Operation(summary = "Adicionar unidade", description = "Adiciona mais unidades disponíveis para empréstimo a um livro existente.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Livro encontrado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Livro não encontrado")
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     public ResponseEntity<Void> addBookUnit(@Valid @RequestBody BookAdditionDTO dto){
         service.addBookUnit(dto);
@@ -74,14 +80,15 @@ public class BookController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Livro atualizado com sucesso",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = BookDTO.class))),
+                            schema = @Schema(implementation = BookResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Livro não encontrado"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name)")
-    public ResponseEntity<BookDTO> updateBookById(
+    public ResponseEntity<BookResponseDTO> updateBookById(
             @PathVariable Long id,
-            @Valid @RequestBody BookDTO dto) {
+            @Valid @RequestBody BookResponseDTO dto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.updateBookById(id, dto));
     }
 
@@ -89,7 +96,8 @@ public class BookController {
     @Operation(summary = "Excluir livro", description = "Remove um livro do sistema pelo ID.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Livro excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Livro não encontrado")
+            @ApiResponse(responseCode = "404", description = "Livro não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name)")
     public ResponseEntity<String> deleteBookById(@PathVariable Long id) {

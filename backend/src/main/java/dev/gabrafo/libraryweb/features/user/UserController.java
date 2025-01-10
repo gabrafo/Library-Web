@@ -25,7 +25,6 @@ public class UserController {
         this.service = service;
     }
 
-    // Endpoint de registro de usuário - API REST
     @PostMapping("/register")
     @Operation(summary = "Registrar um novo usuário", description = "Cria um novo usuário no sistema.")
     @ApiResponses({
@@ -33,7 +32,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
             @ApiResponse(responseCode = "409", description = "Email já em uso")
     })
-    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO dto) {
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.registerUser(dto));
     }
 
@@ -51,7 +50,8 @@ public class UserController {
     @Operation(summary = "Verificar email", description = "Envia um código de verificação para o email fornecido.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Código de verificação enviado"),
-            @ApiResponse(responseCode = "400", description = "Email inválido")
+            @ApiResponse(responseCode = "400", description = "Email inválido"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name) or @userService.isUserEmailOwner(#email, authentication.name)")
     public ResponseEntity<String> verifyEmail(@Valid @RequestBody String email){
@@ -64,7 +64,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Email verificado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Código OTP inválido"),
-            @ApiResponse(responseCode = "404", description = "Email não encontrado")
+            @ApiResponse(responseCode = "404", description = "Email não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name) or @userService.isUserEmailOwner(#email, authentication.name)")
     public ResponseEntity<String> verifyEmailOtp(@PathVariable String email, @PathVariable int otp){
@@ -73,22 +74,28 @@ public class UserController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("@userService.isAdmin(authentication.name)")
     @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista de todos os usuários registrados no sistema.")
-    @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso",
-            content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = UserResponseDTO.class)))
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = UserResponseDTO.class))),
+        @ApiResponse(responseCode = "401", description = "Não autorizado")
+    })
     public ResponseEntity<List<UserResponseDTO>> findAllUsers() {
         List<UserResponseDTO> users = service.findAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@userService.isAdmin(authentication.name) or @userService.isUserIdOwner(#id, authentication.name)")
     @Operation(summary = "Buscar usuário por ID", description = "Retorna os detalhes de um usuário específico pelo ID.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     public ResponseEntity<UserResponseDTO> findUserById(@PathVariable Long id) {
         UserResponseDTO user = service.findUserById(id);
@@ -102,7 +109,8 @@ public class UserController {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name) or @userService.isUserIdOwner(#id, authentication.name)")
     public ResponseEntity<UserResponseDTO> updateUserById(
@@ -116,7 +124,8 @@ public class UserController {
     @Operation(summary = "Excluir usuário", description = "Remove um usuário do sistema pelo ID.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Usuário excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name) or @userService.isUserIdOwner(#id, authentication.name)")
     public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
