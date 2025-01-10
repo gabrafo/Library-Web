@@ -58,7 +58,7 @@ public class UserService {
 
         Address address = addressService.findAddress(dto.zipCode());
 
-        User newUser = mapper.toEntity(dto);
+        User newUser = mapper.fromRequestToEntity(dto);
 
         newUser.setAddress(address);
         newUser.setPassword(encoder.encode(newUser.getPassword()));
@@ -104,6 +104,12 @@ public class UserService {
 
     public UserResponseDTO findUserById(Long id){
         User user = repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado!"));
+
+        return mapper.toResponseDTO(user);
+    }
+
+    public UserResponseDTO findUserByEmail(String email){
+        User user = repository.findByEmail(email).orElseThrow(() -> new NotFoundException("Usuário não encontrado!"));
 
         return mapper.toResponseDTO(user);
     }

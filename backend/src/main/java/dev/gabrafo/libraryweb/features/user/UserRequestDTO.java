@@ -10,7 +10,7 @@ public record UserRequestDTO(
         @NotEmpty
         String name,
 
-        @NotEmpty @Email
+        @NotEmpty @Email(message = "Email deve ser válido!")
         String email,
 
         @NotEmpty
