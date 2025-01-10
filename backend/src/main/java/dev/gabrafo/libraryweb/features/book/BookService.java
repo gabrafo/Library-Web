@@ -25,10 +25,8 @@ public class BookService {
     }
 
     @Transactional
-    public void createBook(BookDTO dto){
-        List<User> users = userRepository.findAllByEmailIn(dto.emailBorrowedBy());
-        Book newBook = mapper.toEntity(dto);
-        newBook.setBorrowedBy(users);
+    public void createBook(BookRequestDTO dto){
+        Book newBook = mapper.fromRequestToEntity(dto);
         if(bookRepository.findByIsbn(dto.isbn()).isPresent()) throw new ExistentBookException("Livro com ISBN '" + dto.isbn() +  "' já existente.");
         bookRepository.save(newBook);
     }
@@ -41,17 +39,17 @@ public class BookService {
         book.get().setQuantity(book.get().getQuantity()+dto.units());
     }
 
-    public List<BookDTO> findAlBooks(){
+    public List<BookResponseDTO> findAlBooks(){
         List<Book> books = bookRepository.findAll();
-        return books.stream().map(BookDTO::new).collect(Collectors.toList());
+        return books.stream().map(BookResponseDTO::new).collect(Collectors.toList());
     }
 
-    public BookDTO findBookById(Long id){
-        return mapper.toDTO(bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Livro não encontrado!")));
+    public BookResponseDTO findBookById(Long id){
+        return mapper.toResponseDTO(bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Livro não encontrado!")));
     }
 
     @Transactional
-    public BookDTO updateBookById(Long id, BookDTO dto){
+    public BookResponseDTO updateBookById(Long id, BookResponseDTO dto){
         Book updatedBook = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Livro não encontrado! Não haverá atualização."));
 
         List<User> users = userRepository.findAllByEmailIn(dto.emailBorrowedBy());
@@ -63,7 +61,7 @@ public class BookService {
         updatedBook.setReleaseDate(dto.releaseDate());
         updatedBook.setPublisher(dto.publisher());
 
-        return mapper.toDTO(updatedBook);
+        return mapper.toResponseDTO(updatedBook);
     }
 
     @Transactional

@@ -1,6 +1,5 @@
 package dev.gabrafo.libraryweb.features.book;
 
-import dev.gabrafo.libraryweb.features.user.User;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -8,9 +7,8 @@ import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public record BookDTO(
+public record BookRequestDTO(
         @NotEmpty
         @Pattern(
                 regexp = "^(97[89]\\d{10})$",
@@ -28,22 +26,17 @@ public record BookDTO(
         @Positive
         int quantity,
 
-        LocalDate releaseDate,
-
-        List<String> emailBorrowedBy
+        LocalDate releaseDate
 ){
     @Builder
-    public BookDTO(Book book) {
+    public BookRequestDTO(Book book) {
         this(
                 book.getIsbn(),
                 book.getTitle(),
                 book.getAuthors(),
                 book.getPublisher(),
                 book.getQuantity(),
-                book.getReleaseDate(),
-                book.getBorrowedBy().stream()
-                        .map(User::getEmail)
-                        .collect(Collectors.toList())
+                book.getReleaseDate()
         );
     }
 }

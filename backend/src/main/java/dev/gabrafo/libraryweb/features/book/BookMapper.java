@@ -4,13 +4,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public class BookMapper {
+public interface BookMapper {
 
-    public BookDTO toDTO(Book book){
-        return BookDTO.builder().book(book).build();
-    }
+    Book fromResponseToEntity(BookResponseDTO dto);
 
-    public Book toEntity(BookDTO BookDTO){
-        return Book.builder().dto(BookDTO).build();
-    }
+    Book fromRequestToEntity(BookRequestDTO dto);
+
+    BookRequestDTO toRequestDTO(Book book);
+
+    BookResponseDTO toResponseDTO(Book book);
 }

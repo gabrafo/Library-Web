@@ -5,7 +5,6 @@ import dev.gabrafo.libraryweb.features.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -54,8 +53,17 @@ public class Book {
     )
     private List<User> borrowedBy;
 
-    @Builder
-    public Book(BookDTO dto){
+    public Book(BookResponseDTO dto){
+        this.bookId = dto.id();
+        this.isbn = dto.isbn();
+        this.title = dto.title();
+        this.authors = dto.authors();
+        this.quantity = dto.quantity();
+        this.publisher = dto.publisher();
+        this.releaseDate = dto.releaseDate();
+    }
+
+    public Book(BookRequestDTO dto){
         this.isbn = dto.isbn();
         this.title = dto.title();
         this.authors = dto.authors();
