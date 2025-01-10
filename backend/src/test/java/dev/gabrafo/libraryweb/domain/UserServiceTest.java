@@ -42,7 +42,7 @@ public class UserServiceTest {
     public void createUser_WithValidData_ReturnsUser(){
         when(userRepository.save(AUTHENTICATED_USER)).thenReturn(AUTHENTICATED_USER);
         when(addressService.findAddress(AUTHENTICATED_USER.getAddress().getZipCode())).thenReturn(ADDRESS);
-        when(userMapper.toEntity(AUTHENTICATED_USER_REQUEST_DTO)).thenReturn(AUTHENTICATED_USER);
+        when(userMapper.fromRequestToEntity(AUTHENTICATED_USER_REQUEST_DTO)).thenReturn(AUTHENTICATED_USER);
         when(passwordEncoder.encode(AUTHENTICATED_USER.getPassword())).thenReturn("password");
 
         UserResponseDTO sut = userService.registerUser(AUTHENTICATED_USER_REQUEST_DTO);
