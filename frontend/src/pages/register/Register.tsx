@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Footer from '../../components/Footer';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -7,7 +8,7 @@ const Register = () => {
         password: '',
         birthDate: '',
         zipCode: '',
-        role: 'AUTHENTICATED', // Valor padrão alterado
+        role: 'AUTHENTICATED',
     });
 
     const [error, setError] = useState<string>('');
@@ -18,9 +19,7 @@ const Register = () => {
 
         let formattedValue = value;
         if (name === 'zipCode') {
-            // Remove tudo que não for número
             formattedValue = value.replace(/\D/g, '');
-            // Adiciona hífen na posição adequada (xxxxx-xxxx)
             if (formattedValue.length > 5) {
                 formattedValue = formattedValue.slice(0, 5) + '-' + formattedValue.slice(5, 9);
             }

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import "../Styles.css";
+import Footer from '../../components/Footer';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -32,10 +34,9 @@ const Login = () => {
             });
     
             if (response.ok) {
-                const token = await response.text(); // A resposta é um texto plano
+                const token = await response.text();
     
                 if (token) {
-                    // Salve o token no localStorage ou cookies
                     localStorage.setItem('authToken', token);
     
                     setSuccess('Login realizado com sucesso!');
@@ -94,12 +95,13 @@ const Login = () => {
                         />
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-100">Entrar</button>
+                    <button type="submit" className= 'btn-primary w-100'>Entrar</button>
                 </form>
                 <div className="text-center mt-3">
                     <p>Não tem uma conta? <a href="/register">Cadastre-se aqui</a></p>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };
