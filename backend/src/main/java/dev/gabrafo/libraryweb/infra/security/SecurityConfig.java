@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/book/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/book/**").hasAnyRole("ADMIN")
                         .anyRequest().authenticated())
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(
                         oauth2 -> oauth2.jwt(Customizer.withDefaults()))
