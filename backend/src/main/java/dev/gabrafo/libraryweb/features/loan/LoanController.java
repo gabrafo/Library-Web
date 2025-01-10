@@ -25,7 +25,8 @@ public class LoanController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Livro emprestado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Erro no empréstimo do livro"),
-            @ApiResponse(responseCode = "404", description = "Usuário ou livro não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário ou livro não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name) or @userService.isUserIdOwner(#userId, authentication.name)")
     public ResponseEntity<String> borrowBook(@RequestParam Long bookId, @RequestParam Long userId) {
@@ -38,7 +39,8 @@ public class LoanController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Livro devolvido com sucesso"),
             @ApiResponse(responseCode = "400", description = "Erro na devolução do livro"),
-            @ApiResponse(responseCode = "404", description = "Usuário ou livro não encontrado")
+            @ApiResponse(responseCode = "404", description = "Usuário ou livro não encontrado"),
+            @ApiResponse(responseCode = "401", description = "Não autorizado")
     })
     @PreAuthorize("@userService.isAdmin(authentication.name) or @userService.isUserIdOwner(#userId, authentication.name)")
     public ResponseEntity<String> returnBook(@RequestParam Long bookId, @RequestParam Long userId) {
