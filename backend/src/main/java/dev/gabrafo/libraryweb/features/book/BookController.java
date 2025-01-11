@@ -88,7 +88,7 @@ public class BookController {
     @PreAuthorize("@userService.isAdmin(authentication.name)")
     public ResponseEntity<BookResponseDTO> updateBookById(
             @PathVariable Long id,
-            @Valid @RequestBody BookResponseDTO dto) {
+            @Valid @RequestBody BookRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.updateBookById(id, dto));
     }
 

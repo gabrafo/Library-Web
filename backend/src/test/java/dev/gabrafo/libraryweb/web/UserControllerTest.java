@@ -8,21 +8,16 @@ import dev.gabrafo.libraryweb.features.user.UserController;
 import dev.gabrafo.libraryweb.features.user.UserRepository;
 import dev.gabrafo.libraryweb.features.user.UserRequestDTO;
 import dev.gabrafo.libraryweb.features.user.UserService;
-import dev.gabrafo.libraryweb.infra.security.JwtService;
 import dev.gabrafo.libraryweb.infra.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.Collections;
 
 import static dev.gabrafo.libraryweb.common.TestUtils.AUTHENTICATED_USER_REQUEST_DTO;
 import static dev.gabrafo.libraryweb.common.TestUtils.AUTHENTICATED_USER_RESPONSE_DTO;
@@ -50,22 +45,9 @@ public class UserControllerTest {
     @MockitoBean
     private UserRepository userRepository;
 
-    @MockitoBean
-    private JwtService jwtService;
-
     @Autowired
     private MockMvc mockMvc;
 
-    private JwtAuthenticationToken mockJwtAuthenticationToken(String token) {
-        // A criação de um JwtAuthenticationToken real seria mais complexa, você só está mockando a ideia do JWT
-        Jwt jwt = Jwt.withTokenValue(token)
-                .header("alg", "HS256")
-                .claim("sub", "authenticated@email.com")
-                .claim("id", 1L)
-                .build();
-
-        return new JwtAuthenticationToken(jwt, Collections.singletonList(new SimpleGrantedAuthority("ROLE_AUTHENTICATED")));
-    }
     @Test
     public void createUser_WithValidData_ReturnsCreated() throws Exception {
         when(userService.registerUser(AUTHENTICATED_USER_REQUEST_DTO)).thenReturn(AUTHENTICATED_USER_RESPONSE_DTO);

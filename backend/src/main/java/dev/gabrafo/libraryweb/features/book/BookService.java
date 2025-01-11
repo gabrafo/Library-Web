@@ -5,6 +5,7 @@ import dev.gabrafo.libraryweb.errors.exceptions.NotFoundException;
 import dev.gabrafo.libraryweb.features.user.User;
 import dev.gabrafo.libraryweb.features.user.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,10 +50,14 @@ public class BookService {
     }
 
     @Transactional
-    public BookResponseDTO updateBookById(Long id, BookResponseDTO dto){
+    public BookResponseDTO updateBookById(Long id, @Valid BookRequestDTO dto){
         Book updatedBook = bookRepository.findById(id).orElseThrow(() -> new NotFoundException("Livro não encontrado! Não haverá atualização."));
 
-        List<User> users = userRepository.findAllByEmailIn(dto.emailBorrowedBy());
+        List<String> borrowedEmails = updatedBook.getBorrowedBy().stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
+
+        List<User> users = userRepository.findAllByEmailIn(borrowedEmails);
 
         updatedBook.setAuthors(dto.authors());
         updatedBook.setIsbn(dto.isbn());
