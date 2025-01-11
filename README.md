@@ -30,7 +30,7 @@ A arquitetura foi planejada com base nas necessidades do sistema, e algumas muda
 ## Tecnologias utilizadas
 
 - **Spring Boot**: Framework principal para o backend.
-- **Spring Security, OAuth2 e JWT**: Implementação de segurança, incluindo autenticação via OpenID.
+- **Spring Security, OAuth2 e JWT**: Implementação de segurança.
 - **Java Mail Sender**: Para envio de e-mails de confirmação e recuperação de senha.
 - **Open Feign**: Consumo da API **ViaCEP** para obter informações de endereço.
 - **Swagger**: Documentação dos endpoints da API.
