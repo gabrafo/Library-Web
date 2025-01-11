@@ -27,7 +27,7 @@ A arquitetura de dados foi planejada com base nas seguintes entidades principais
    - A ideia é que a entidade `Address` seja preenchida com os dados retornados pela requisição à API **ViaCEP**, utilizando o código postal como base.
 
 3. **Book**:
-   - Representa o livro enquanto obra, sem considerar edições específicas. Assim, contemplará informações mais gerais como gênero textual, autor, etc.
+   - Representa o livro, contemplando informações como título, quantidade de exemplares disponíveis, autor, etc.
 
 ### Mudanças no Diagrama Relacional
 
@@ -35,14 +35,15 @@ A arquitetura foi planejada com base nas necessidades do sistema, e algumas muda
 
 - A exclusão do atributo `CEP` da entidade `Pessoa`, substituindo-o por uma relação com a nova entidade `Address`.
 
-## Tecnologias utilizadas (ou a serem utilizadas)
+## Tecnologias utilizadas
 
 - **Spring Boot**: Framework principal para o backend.
-- **Spring Security**: Implementação de segurança, incluindo autenticação via OpenID.
-- **Thymeleaf**: Engine de templates para o frontend.
+- **Spring Security, OAuth2 e JWT**: Implementação de segurança, incluindo autenticação via OpenID.
 - **Java Mail Sender**: Para envio de e-mails de confirmação e recuperação de senha.
-- **APIs externas**: Consumo da API **ViaCEP** para obter informações de endereço.
+- **Open Feign**: Consumo da API **ViaCEP** para obter informações de endereço.
+- **Swagger**: Documentação dos endpoints da API.
 - **JUnit, Mockito**: Para testes de unidade e integração.
+- **TypeScript, HTML, CSS e React**: Para o frontend (que, atualmente, conta com telas de cadastro, login, perfil de usuário e empréstimo de livros).
 
 ## Como executar o projeto
 
@@ -50,6 +51,13 @@ A arquitetura foi planejada com base nas necessidades do sistema, e algumas muda
    ```bash
    git clone https://github.com/gabrafo/Library-Web.git
    cd Library-Web
+   ```
+
+### Backend
+
+1. Navegue até a subpasta "backend":
+   ```bash
+   cd backend
    ```
 
 2. Compile o projeto utilizando o Maven:
@@ -63,10 +71,27 @@ A arquitetura foi planejada com base nas necessidades do sistema, e algumas muda
    docker-compose up
    ```
 
-4. A API estará disponível em `http://localhost:8080`.
+4. A API estará disponível em `http://localhost:8080`, e a documentação em 'http://localhost:8080/swagger-ui/index.html#/'.
+
+---
+
+### Frontend
+
+1. Navegue até a subpasta "frontend":
+   ```bash
+   cd backend
+   ```
+
+2. Instale as dependências do projeto usando NPM:
+   ```bash
+   npm install
+   ```
+
+3. Execute o projeto:
+   ```bash
+   npm run dev
+   ```
 
 ## Melhorias planejadas
 
-- **Testes**: Como mencionado, planejo adicionar cobertura de testes robusta.
-- **Integração com OpenID**: Será implementado o login com contas de serviços como o Gmail.
-- **Frontend**: Desenvolvimento de uma interface de usuário com Thymeleaf.
+- **Testes**: Como mencionado, planejo melhor ainda mais a cobertura de testes, para que seja mais robusta.
