@@ -4,14 +4,6 @@ Esta é uma API para gestão de livros e usuários, desenvolvida como parte de u
 
 A versão anterior dessa API está disponível em [BibliotecaAPI](https://github.com/gabrafo/BibliotecaAPI).
 
-## Funcionalidades planejadas
-
-- **Testagem robusta**: Planejo adicionar uma cobertura de testes abrangente, com testes unitários e de integração.
-- **Autenticação com OpenID**: Implementação de login via serviços de terceiros (como Google, GitHub, etc.) utilizando OpenID, permitindo que os usuários façam login de forma simples e segura.
-- **Frontend com Thymeleaf**: Criação de um frontend para a aplicação utilizando **Thymeleaf** como template engine, integrado com o backend em Spring Boot.
-- **Confirmação de email e recuperação de senha**: Implementação de funcionalidades para confirmação de e-mail durante o cadastro e recuperação de senha utilizando o **Java Mail Sender**.
-- **Consumo de APIs externas**: A aplicação irá consumir a API **ViaCEP** para obter informações de endereço a partir de um CEP.
-
 ## Arquitetura
 
 ### Estrutura de Entidades
