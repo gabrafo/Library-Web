@@ -63,7 +63,7 @@ A arquitetura foi planejada com base nas necessidades do sistema, e algumas muda
    docker-compose up
    ```
 
-4. A API estará disponível em `http://localhost:8080`, e a documentação em 'http://localhost:8080/swagger-ui/index.html#/'.
+4. A API estará disponível em `http://localhost:8080`, e a documentação em `http://localhost:8080/swagger-ui/index.html#/`.
 
 ---
 
