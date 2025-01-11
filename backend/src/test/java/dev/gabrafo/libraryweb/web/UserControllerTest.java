@@ -1,28 +1,41 @@
 package dev.gabrafo.libraryweb.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.gabrafo.libraryweb.errors.exceptions.ExistentEmailException;
+import dev.gabrafo.libraryweb.errors.handlers.GeneralExceptionHandler;
 import dev.gabrafo.libraryweb.features.address.AddressService;
 import dev.gabrafo.libraryweb.features.user.UserController;
+import dev.gabrafo.libraryweb.features.user.UserRepository;
+import dev.gabrafo.libraryweb.features.user.UserRequestDTO;
 import dev.gabrafo.libraryweb.features.user.UserService;
+import dev.gabrafo.libraryweb.infra.security.JwtService;
 import dev.gabrafo.libraryweb.infra.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
+import java.util.Collections;
+
 import static dev.gabrafo.libraryweb.common.TestUtils.AUTHENTICATED_USER_REQUEST_DTO;
 import static dev.gabrafo.libraryweb.common.TestUtils.AUTHENTICATED_USER_RESPONSE_DTO;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@ContextConfiguration(classes = {SecurityConfig.class, UserController.class})
+@ContextConfiguration(classes = {SecurityConfig.class, UserController.class, GeneralExceptionHandler.class})
 public class UserControllerTest {
 
     @Autowired
@@ -34,9 +47,25 @@ public class UserControllerTest {
     @MockitoBean
     private UserService userService;
 
+    @MockitoBean
+    private UserRepository userRepository;
+
+    @MockitoBean
+    private JwtService jwtService;
+
     @Autowired
     private MockMvc mockMvc;
 
+    private JwtAuthenticationToken mockJwtAuthenticationToken(String token) {
+        // A criação de um JwtAuthenticationToken real seria mais complexa, você só está mockando a ideia do JWT
+        Jwt jwt = Jwt.withTokenValue(token)
+                .header("alg", "HS256")
+                .claim("sub", "authenticated@email.com")
+                .claim("id", 1L)
+                .build();
+
+        return new JwtAuthenticationToken(jwt, Collections.singletonList(new SimpleGrantedAuthority("ROLE_AUTHENTICATED")));
+    }
     @Test
     public void createUser_WithValidData_ReturnsCreated() throws Exception {
         when(userService.registerUser(AUTHENTICATED_USER_REQUEST_DTO)).thenReturn(AUTHENTICATED_USER_RESPONSE_DTO);
@@ -57,5 +86,36 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.address.federalUnit").value("SP"))
                 .andExpect(jsonPath("$.borrowedBooks").isEmpty());
 
+    }
+
+    @Test
+    public void createUser_WithInvalidData_ReturnsBadRequest() throws Exception {
+        UserRequestDTO emptyRequest = new UserRequestDTO(
+                "",
+                "",
+                "",
+                "",
+                LocalDate.now(),
+                ""
+        );
+
+        mockMvc.perform(post("/user/register")
+                .content(objectMapper.writeValueAsString(emptyRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createUser_WithExistingEmail_ReturnsBadRequest() throws Exception {
+        when(userService.registerUser(any()))
+                .thenThrow(new ExistentEmailException("Email já em uso!"));;
+
+        mockMvc.perform(post("/user/register")
+                        .content(objectMapper.writeValueAsString(AUTHENTICATED_USER_REQUEST_DTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.msg").value("Email já em uso!"))
+                .andExpect(jsonPath("$.timestamp").exists());
     }
 }
