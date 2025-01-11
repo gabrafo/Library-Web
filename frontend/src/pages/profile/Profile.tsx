@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import './Profile.css';
 
-// Definindo a interface para os dados do perfil
 interface Book {
   id: number;
   title: string;

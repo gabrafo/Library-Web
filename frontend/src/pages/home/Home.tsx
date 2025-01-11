@@ -1,6 +1,6 @@
 import React from 'react';
 import './Home.css';
-import Footer from '../../components/Footer';
+import Footer from '../../components/footer/Footer';
 import bookImage from '../../assets/book_home.png';
 
 
